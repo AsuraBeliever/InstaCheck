@@ -51,8 +51,11 @@ def update_gui(current_followers, current_followees, FOLLOWERS_FILE):
         with open(FOLLOWERS_FILE, "r") as file:
             previous_followers = set(line.strip() for line in file.readlines())
             unfollowers = previous_followers - current_followers
-        for user in sorted(unfollowers):
-            tk.Label(followers_check, text=user).pack()
+            if unfollowers:
+                for user in sorted(unfollowers):
+                    tk.Label(followers_check, text=user).pack()
+            else:
+                tk.Label(followers_check, text="No one unfollowed you!").pack()
     else:
         tk.Label(followers_check, text="📄 First run — saving followers list.").pack()
 
