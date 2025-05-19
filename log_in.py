@@ -2,21 +2,24 @@ import instaloader
 import tkinter as tk
 
 class InstagramAccount:
-    def __init__(self, title : str, resolution : str):
+    def __init__(self, title : str, resolution : str, tkinterApp : str):
         self.L = instaloader.Instaloader()
-        self.login_window = tk.Tk()
+        self.login_window = tk.Toplevel(tkinterApp)
         self.login_window.title(title)
         self.login_window.geometry(resolution)
+        self.logged_in_username = None
+
+        #Interfaz
+        tk.Label(self.login_window, text="Username").pack()
+        self.username_box = tk.Entry(self.login_window)
+        self.username_box.pack()
+        tk.Label(self.login_window, text="Password").pack()
+        self.password_box = tk.Entry(self.login_window, show="*")
+        self.password_box.pack()
+        tk.Button(self.login_window, text="Save", command=self.login).pack()
     
     def getUserData(self):
-        tk.Label(self.login_window, text="Username").pack()
-        username_box = tk.Entry(self.login_window)
-        username_box.pack()
-        tk.Label(self.login_window, text="Password").pack()
-        password_box = tk.Entry(self.login_window)
-        password_box.pack()
-        tk.Button(self.login_window, text="Save", command=self.login).pack()
-        return username_box.get(), password_box.get()
+        return self.username_box.get(), self.password_box.get()
 
     def login(self):
         username, password = self.getUserData()
@@ -30,7 +33,8 @@ class InstagramAccount:
                 code = self.twoFactorAuthCode()
                 self.L.two_factor_login(code)
                 self.L.save_session_to_file()
-            
+
+        self.logged_in_username = username
         self.showSuccessWindow()
 
     def twoFactorAuthCode(self):
@@ -56,9 +60,3 @@ class InstagramAccount:
         success_window.geometry("200x200")
         tk.Label(success_window, text="Logged in successfully!").pack()
         tk.Button(success_window, text="Done", command= lambda: [success_window.destroy(), self.login_window.destroy()]).pack()
-        self.login_window.mainloop()
-
-
-
-
-
