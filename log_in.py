@@ -2,33 +2,25 @@ import instaloader
 import tkinter as tk
 
 def login():
-    login_window = tk.Tk()
-    login_window.title("Log-in")
-    login_window.geometry("300x300")
-
-    L = instaloader.Instaloader()
-    tk.Label(login_window, text="Username").pack()
-    username_box = tk.Entry(login_window)
-    username_box.pack()
-    tk.Label(login_window, text="Password").pack()
-    password_box = tk.Entry(login_window)
-    password_box.pack()
-    tk.Button(login_window, text="Save", command=login).pack()
-
     username = username_box.get()
     password = password_box.get()
     try:
-        L.load_session_from_file(username)  # Should prompt for 2FA
+        L.load_session_from_file(username)
     except FileNotFoundError:
         try:
-            L.login(username, password)
+            L.login(username, password) # Should prompt for 2FA
             L.save_session_to_file()
         except instaloader.exceptions.TwoFactorAuthRequiredException:
             code = twoFactorAuthCode()
             L.two_factor_login(code)
-
-    tk.Label(login_window, text="Logged in successfully!").pack()
-    login_window.mainloop()
+            L.save_session_to_file()
+    
+    success_window = tk.Tk()
+    success_window.title("Success!")
+    success_window.geometry("200x200")
+    tk.Label(success_window, text="Logged in successfully!").pack()
+    tk.Button(success_window, text="Done", command= lambda: success_window.destroy() and login_window.destroy()).pack()
+    success_window.mainloop()
 
 def twoFactorAuthCode():
     code = None
@@ -47,4 +39,20 @@ def twoFactorAuthCode():
     auth_window.mainloop()
     return code
     
+
+login_window = tk.Tk()
+login_window.title("Log-in")
+login_window.geometry("300x300")
+
+L = instaloader.Instaloader()
+
+tk.Label(login_window, text="Username").pack()
+username_box = tk.Entry(login_window)
+username_box.pack()
+tk.Label(login_window, text="Password").pack()
+password_box = tk.Entry(login_window)
+password_box.pack()
+tk.Button(login_window, text="Save", command=login).pack()
+
+login_window.mainloop()
 

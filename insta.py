@@ -1,14 +1,16 @@
 import instaloader
+import tkinter as tk
 import os
+
+followers_check = tk.Tk()
+followers_check.title("Instagram Followers Checker")
+followers_check.geometry("500x400")
 
 USERNAME = "alanmnjz"
 FOLLOWERS_FILE = "followers.txt"
 
-# Load Instaloader session
-L = instaloader.Instaloader()
-L.load_session_from_file(USERNAME)
-
 # Get your profile
+L = instaloader.Instaloader()
 profile = instaloader.Profile.from_username(L.context, USERNAME)
 
 # Get current followers and followees
@@ -22,14 +24,19 @@ if os.path.exists(FOLLOWERS_FILE):
 
     unfollowers = previous_followers - current_followers
 
-    print("\n📉 People who unfollowed you since last check:")
+    # print("\n📉 People who unfollowed you since last check:")
+    tk.Label(followers_check, text="📉 People who unfollowed you since last check:").pack()
+
     if unfollowers:
         for user in sorted(unfollowers):
-            print(user)
+            # print(user)
+            tk.Label(followers_check, text=user).pack()
     else:
-        print("No one unfollowed you.")
+        # print("No one unfollowed you.")
+        tk.Label(followers_check, text="No one unfolled you.").pack()
 else:
-    print("📄 First run — saving your followers list.")
+    # print("📄 First run — saving your followers list.")
+    tk.Label(followers_check, text="📄 First run — saving your followers list.").pack()
 
 # Save current followers to file for next time
 with open(FOLLOWERS_FILE, "w") as file:
@@ -39,9 +46,15 @@ with open(FOLLOWERS_FILE, "w") as file:
 # ========== CHECK WHO DOESN'T FOLLOW BACK ==========
 not_following_back = current_followees - current_followers
 
-print("\n🙈 People you follow who don't follow you back:")
+# print("\n🙈 People you follow who don't follow you back:")
+tk.Label(followers_check, text="🙈 People you follow who don't follow you back:").pack()
 if not_following_back:
     for user in sorted(not_following_back):
-        print(user)
+        # print(user)
+        tk.Label(followers_check, text=user).pack()
 else:
-    print("Everyone you follow follows you back!")
+    # print("Everyone you follow follows you back!")
+    tk.Label(followers_check, text="Everyone you follow follows you back!").pack()
+
+
+followers_check.mainloop()
