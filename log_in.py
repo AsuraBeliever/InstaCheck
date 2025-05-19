@@ -14,17 +14,12 @@ def login():
             code = twoFactorAuthCode()
             L.two_factor_login(code)
             L.save_session_to_file()
-    
-    success_window = tk.Tk()
-    success_window.title("Success!")
-    success_window.geometry("200x200")
-    tk.Label(success_window, text="Logged in successfully!").pack()
-    tk.Button(success_window, text="Done", command= lambda: success_window.destroy() and login_window.destroy()).pack()
-    success_window.mainloop()
+        
+    showSuccessWindow()
 
 def twoFactorAuthCode():
     code = None
-    auth_window = tk.Tk()
+    auth_window = tk.Toplevel(login_window)
     auth_window.title("Two Factor Authentication")
     auth_window.geometry("250x300")
     tk.Label(auth_window, text="Enter code").pack()
@@ -36,16 +31,19 @@ def twoFactorAuthCode():
         auth_window.destroy()
     
     tk.Button(auth_window, text="Send", command=getCode).pack()
-    auth_window.mainloop()
+    auth_window.wait_window()
     return code
-    
+
+def showSuccessWindow():
+    success_window = tk.Toplevel(login_window)
+    success_window.title("Success!")
+    success_window.geometry("200x200")
+    tk.Label(success_window, text="Logged in successfully!").pack()
+    tk.Button(success_window, text="Done", command= lambda: [success_window.destroy(), login_window.destroy()]).pack()
 
 login_window = tk.Tk()
 login_window.title("Log-in")
 login_window.geometry("300x300")
-
-L = instaloader.Instaloader()
-
 tk.Label(login_window, text="Username").pack()
 username_box = tk.Entry(login_window)
 username_box.pack()
@@ -55,4 +53,8 @@ password_box.pack()
 tk.Button(login_window, text="Save", command=login).pack()
 
 login_window.mainloop()
+
+L = instaloader.Instaloader()
+
+
 
