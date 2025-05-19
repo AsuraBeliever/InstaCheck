@@ -7,6 +7,7 @@ import os
 followers_check = tk.Tk()
 followers_check.title("Instagram Followers Checker")
 followers_check.geometry("500x400")
+
 obj = InstagramAccount("Log-in", "450x300", followers_check)
 
 loading = tk.Label(followers_check, text="Loading followers data.. Please Wait", fg="blue")
